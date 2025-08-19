@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import Post, { usePostStoreTest } from "./Post"
+import Post, { usePostStore } from "./Post"
 
 function Home() {
-  const { posts, loading, error, fetchPosts: fetchPosts } = usePostStoreTest();
+  const { posts, loading, error, fetchPosts: fetchPosts } = usePostStore();
 
   useEffect(() => {
     fetchPosts();
@@ -26,7 +26,9 @@ function Home() {
             </h1>
           ) : (
             posts.map(post => (
-              <Post id={post.id} author={post.author} title={post.title} content={post.content}></Post>
+              <li key={post.id} className="list-none">
+                <Post id={post.id} author={post.author} title={post.title} content={post.content}></Post>
+              </li>
             ))
           )
         )

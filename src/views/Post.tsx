@@ -24,7 +24,7 @@ export const usePostStore = create<PostStore>((set) => ({
   fetchPosts: async () => {
     set({ loading: true });
     try {
-      const res = await fetch("code.oneprog.org/api/posts");
+      const res = await fetch("http://code.oneprog.org/api/");
       const data: PostData[] = await res.json();
       set({ posts: data, loading: false });
     } catch (err: any) {
@@ -34,32 +34,19 @@ export const usePostStore = create<PostStore>((set) => ({
   }
 }));
 
-export const usePostStoreTest = create<PostStore>((set) => ({
-  posts: [],
-  loading: true, 
-  error: null,
-  fetchPosts: async () => {
-    set({ loading: false, posts: [ 
-      { id: 0, author: "OneProg", title: "Тест", content: "Вау, это реально тест!" },
-      { id: 1, author: "OneProg", title: "Светлая тема", content: "Светлая тема - топ!" },
-      { id: 2, author: "OneProg", title: "Lorem ipsum", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." }
-    ] });
-  }
-}));
-
 function Post({ id, author, title, content } : PostData ) {
   return (
-    <Card>
+    <Card className="shadow-lg">
       <CardHeader>
         <h1 className="text-2xl text-shadow-md">
             { title }
         </h1>
 
-        <h1 className="text-muted-foreground">
-            { "От " } { author }
+        <h1 className="text-muted-foreground text-shadow-sm">
+            { "От: " } { author }
         </h1>
 
-        <h1 className="text-muted-foreground">
+        <h1 className="text-muted-foreground text-shadow-sm">
             { "Id поста: " } { id }
         </h1>
       </CardHeader>
@@ -71,8 +58,9 @@ function Post({ id, author, title, content } : PostData ) {
       </CardContent>
 
       <CardFooter>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" className="shadow-md w-30">
           <Heart />
+          { "Нравится" }
         </Button>
       </CardFooter>
     </Card>

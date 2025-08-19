@@ -1,8 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Code, HomeIcon, Settings } from "lucide-react"
+import { Code, HomeIcon, ListTodo, Settings } from "lucide-react"
 import Contests from "./views/Contests"
 import Account from "./views/Account"
 import Home from "./views/Home"
+import Tasks from "./views/Tasks"
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
       </div>
 
       <Tabs defaultValue="home">
-        <TabsList>
+        <TabsList className="shadow-lg">
           <TabsTrigger value="home">
             <HomeIcon />
             { "Главная" }
@@ -29,6 +30,11 @@ function App() {
             { "Контесты" }
           </TabsTrigger>
 
+          <TabsTrigger value="tasks">
+            <ListTodo />
+            { "Задачи" }
+          </TabsTrigger>
+
           <TabsTrigger value="account">
             <Settings />
             { "Аккаунт" }
@@ -37,6 +43,7 @@ function App() {
 
         <TabsContent value="home"><Home /></TabsContent>
         <TabsContent value="contests"><Contests /></TabsContent>
+        <TabsContent value="tasks"><Tasks /></TabsContent>
         <TabsContent value="account"><Account /></TabsContent>
       </Tabs>
     </div>
