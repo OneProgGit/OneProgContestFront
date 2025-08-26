@@ -26,7 +26,7 @@ export const usePostStore = create<PostStore>((set) => ({
     fetchPosts: async () => {
         set({ loading: true })
         try {
-            const res = await fetch(apiUrl + "/users")
+            const res = await fetch(apiUrl + "/posts")
             const data: PostData[] = await res.json()
             set({ posts: data, loading: false })
         } catch (err: any) {
