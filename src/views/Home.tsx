@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Post, { usePostStore } from "./Post"
 
 function Home() {
-    const { posts, loading, error, fetchPosts: fetchPosts } = usePostStore();
+    const { posts, loading, error, fetchPosts: fetchPosts } = usePostStore()
 
     useEffect(() => {
         fetchPosts()

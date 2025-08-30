@@ -5,55 +5,38 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage, Form } from "
 import { Input } from "@/components/ui/input";
 import { apiUrl } from "@/main";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircleIcon, Check, CheckCircle2, LogOutIcon } from "lucide-react";
+import { AlertCircleIcon, Check, CheckCircle2, LogInIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-const usernameSchema = z.string()
-    .min(4, "Имя пользователя должно содержать минимум 4 символа")
-    .max(16, "Имя пользователя не может содержать более 16 символов")
-    .regex(/^\w+$/, "Имя пользователя может содержнать только буквы, цифры и нижние подчёркивания")
-
-const passwordSchema = z.string()
-    .min(8, "Пароль должен содержать минимум 8 символов")
-    .max(32, "Пароль не может содержать более 32 символов")
-    .regex(/[A-Z]/, "Пароль должен содержать минимум 1 заглавную букву")
-    .regex(/[a-z]/, "Пароль должен содержать минимум 1 строчную букву")
-    .regex(/\d/, "Пароль должен содержать минимум 1 цифру")
-    .regex(/[!@#$%^&*(),.?":{}|<>+\-`~]/, "Пароль должен содержать минимум 1 специальный символ")
-
 const formSchema = z.object({
-    username: usernameSchema,
-    password: passwordSchema,
-    confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-    message: "Пароли не совпадают",
-    path: ["confirmPassword"]
+    username: z.string(),
+    password: z.string(),
 })
 
-type RegisterFormValues = z.infer<typeof formSchema>
+type LoginFormValues = z.infer<typeof formSchema>
 
-function Register() {
+function Login() {
     const [successOpen, setSuccessOpen] = useState(false)
     const [failedOpen, setFailedOpen] = useState(false)
     const [dialogOpen, setDialogOpen] = useState(false)
 
-    const form = useForm<RegisterFormValues>({
+    const form = useForm<LoginFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             username: "",
             password: "",
-            confirmPassword: "",
         }
     })
 
-    const [jsonData, setJsonData] = useState({ "message": "Успех", "error": "Ошибка" })
+    const [jsonData, setJsonData] = useState({ "message": "Успех", "error": "Ошибка", "token": "Токен" })
 
-    async function onSubmit(data: RegisterFormValues) {
+
+    async function onSubmit(data: LoginFormValues) {
         setDialogOpen(false)
 
-        const res = await fetch(apiUrl + "/users", {
+        const res = await fetch(apiUrl + "/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -69,30 +52,30 @@ function Register() {
         setJsonData(gotData)
 
         if (res.ok) {
+            localStorage.setItem("token", gotData.token)
             setSuccessOpen(true)
         } else {
             setFailedOpen(true)
         }
     }
 
-
     return <>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
                 <Button className="w-36 shadow-lg">
-                    <LogOutIcon />
-                    {"Регистрация"}
+                    <LogInIcon />
+                    {"Вход"}
                 </Button>
             </DialogTrigger>
 
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-shadow-sm">
-                        {"Регистрация аккаунта"}
+                        {"Вход в аккаунт"}
                     </DialogTitle>
 
                     <DialogDescription>
-                        {"Регистрация аккаунта OneProg Контеста"}
+                        {"Вход в аккаунт OneProg Контеста"}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -135,25 +118,7 @@ function Register() {
                             )}
                         />
 
-                        <FormField
-                            control={form.control}
-                            name="confirmPassword"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-shadow-sm">
-                                        {"Подтвердите пароль"}
-                                    </FormLabel>
-
-                                    <FormControl>
-                                        <Input type="password" placeholder="Подтвердите пароль..." {...field}></Input>
-                                    </FormControl>
-
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <Button className="w-38 border-md border-rose-500 shadow-md" type="submit" variant="outline">
+                        <Button className="w-38 border-md border-fuchsia-500 shadow-md" type="submit" variant="outline">
                             <CheckCircle2 />
                             {"Подтвердить"}
                         </Button>
@@ -209,4 +174,4 @@ function Register() {
     </>
 }
 
-export default Register
+export default Login

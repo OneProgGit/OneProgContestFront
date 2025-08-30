@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { apiUrl } from "@/main";
 import { Heart } from "lucide-react";
 import { create } from "zustand";
 
@@ -17,8 +18,6 @@ interface PostStore {
     fetchPosts: () => void
 }
 
-const apiUrl = import.meta.env.VITE_API_URL
-
 export const usePostStore = create<PostStore>((set) => ({
     posts: [],
     loading: true,
@@ -27,8 +26,13 @@ export const usePostStore = create<PostStore>((set) => ({
         set({ loading: true })
         try {
             const res = await fetch(apiUrl + "/posts")
-            const data: PostData[] = await res.json()
-            set({ posts: data, loading: false })
+
+            if (!res.ok) {
+                set({ error: "Не удалось получить новости", loading: false })
+            } else {
+                const data: PostData[] = await res.json()
+                set({ posts: data, loading: false })   
+            }
         } catch (err: any) {
             console.error(err)
             set({ error: err.message, loading: false })
